@@ -3,6 +3,8 @@ import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import './SimpleMap.css';
+import AirQualityMarker from './components/AirQualityMarker';
+import { fetchAirQualityData, getAirQualitySummary, isDangerousAirQuality } from './services/airQualityService';
 
 // Fix for default markers in react-leaflet
 delete L.Icon.Default.prototype._getIconUrl;
@@ -16,6 +18,9 @@ const SimpleMap = forwardRef((props, ref) => {
   const [position, setPosition] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [airQualityData, setAirQualityData] = useState([]);
+  const [airQualityLoading, setAirQualityLoading] = useState(false);
+  const [airQualityError, setAirQualityError] = useState(null);
   const mapRef = useRef(null);
 
   // Default coordinates for New York City
@@ -51,12 +56,61 @@ const SimpleMap = forwardRef((props, ref) => {
     );
   }, [defaultPosition]);
 
+  // Fetch air quality data when position changes
+  useEffect(() => {
+    if (position) {
+      fetchAirQualityForLocation(position[0], position[1]);
+      requestNotificationPermission();
+    }
+  }, [position]);
+
+  // Fetch air quality data for current location
+  const fetchAirQualityForLocation = async (lat, lng) => {
+    setAirQualityLoading(true);
+    setAirQualityError(null);
+    
+    try {
+      const data = await fetchAirQualityData(lat, lng);
+      setAirQualityData(data);
+      
+      // Check for dangerous air quality and show alert
+      const summary = getAirQualitySummary(data);
+      if (isDangerousAirQuality(summary.pm25)) {
+        showAirQualityAlert(summary);
+      }
+    } catch (error) {
+      console.error('Error fetching air quality data:', error);
+      setAirQualityError('Unable to load air quality data');
+    } finally {
+      setAirQualityLoading(false);
+    }
+  };
+
+  // Show air quality alert
+  const showAirQualityAlert = (summary) => {
+    if ('Notification' in window && Notification.permission === 'granted') {
+      new Notification('Air Quality Alert', {
+        body: `${summary.status}: ${summary.message}`,
+        icon: '/favicon.ico'
+      });
+    }
+  };
+
+  // Request notification permission
+  const requestNotificationPermission = async () => {
+    if ('Notification' in window && Notification.permission === 'default') {
+      await Notification.requestPermission();
+    }
+  };
+
   // Handle location search
   const handleLocationSelect = (coordinates, label) => {
     setPosition(coordinates);
     if (mapRef.current) {
       mapRef.current.setView(coordinates, 13);
     }
+    // Fetch air quality data for the new location
+    fetchAirQualityForLocation(coordinates[0], coordinates[1]);
   };
 
   // Expose the handleLocationSelect method to parent components
@@ -101,10 +155,55 @@ const SimpleMap = forwardRef((props, ref) => {
             You are here 📍
           </Popup>
         </Marker>
+        
+        {/* Air Quality Markers */}
+        {airQualityData.map((aqData, index) => (
+          <AirQualityMarker key={`${aqData.location}-${index}`} data={aqData} />
+        ))}
       </MapContainer>
       {error && (
         <div className="map-warning">
           <p>{error}. Using default location (New York City).</p>
+        </div>
+      )}
+      
+      {/* Air Quality Status */}
+      {airQualityLoading && (
+        <div className="air-quality-status loading">
+          <div className="status-spinner"></div>
+          <p>Loading air quality data...</p>
+        </div>
+      )}
+      
+      {airQualityError && (
+        <div className="air-quality-status error">
+          <p>{airQualityError}</p>
+        </div>
+      )}
+      
+      {!airQualityLoading && !airQualityError && airQualityData.length > 0 && (
+        <div className="air-quality-status">
+          <div className="status-header">
+            <h4>🌫️ Air Quality Status</h4>
+            <span className="sensor-count">{airQualityData.length} sensor{airQualityData.length !== 1 ? 's' : ''} nearby</span>
+          </div>
+          <div className="status-summary">
+            {getAirQualitySummary(airQualityData).status !== 'No Data' ? (
+              <div className="summary-card">
+                <div className="summary-indicator" style={{ backgroundColor: getAirQualitySummary(airQualityData).color }}>
+                  <span className="summary-value">
+                    {getAirQualitySummary(airQualityData).pm25 ? Math.round(getAirQualitySummary(airQualityData).pm25) : '?'} μg/m³
+                  </span>
+                  <span className="summary-category">{getAirQualitySummary(airQualityData).status}</span>
+                </div>
+                <p className="summary-message">{getAirQualitySummary(airQualityData).message}</p>
+              </div>
+            ) : (
+              <div className="no-data">
+                <p>No air quality data available for this area</p>
+              </div>
+            )}
+          </div>
         </div>
       )}
     </div>
