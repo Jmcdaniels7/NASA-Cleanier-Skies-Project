@@ -4,6 +4,7 @@ import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import './SimpleMap.css';
 import AirQualityMarker from './components/AirQualityMarker';
+import NewsSection from './components/NewsSection';
 import { fetchAirQualityData, getAirQualitySummary, isDangerousAirQuality } from './services/airQualityService';
 
 // Fix for default markers in react-leaflet
@@ -217,6 +218,9 @@ const SimpleMap = forwardRef((props, ref) => {
             ) : null}
           </div>
         )}
+
+        {/* News Section Overlay - Below AQI box */}
+        <NewsSection />
       </MapContainer>
       {error && (
         <div className="map-warning">
