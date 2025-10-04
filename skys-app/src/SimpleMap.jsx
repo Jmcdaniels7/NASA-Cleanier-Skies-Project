@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, forwardRef, useImperativeHandle } from 'react';
+import React, { useState, useEffect, useRef, forwardRef, useImperativeHandle, useCallback } from 'react';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
@@ -56,13 +56,23 @@ const SimpleMap = forwardRef((props, ref) => {
     );
   }, [defaultPosition]);
 
+  // Debounced air quality fetch to prevent vibration
+  const debouncedFetchAirQuality = useCallback(() => {
+    const timeoutId = setTimeout(() => {
+      if (position) {
+        fetchAirQualityForLocation(position[0], position[1]);
+        requestNotificationPermission();
+      }
+    }, 1000); // 1 second delay
+    
+    return () => clearTimeout(timeoutId);
+  }, [position]);
+
   // Fetch air quality data when position changes
   useEffect(() => {
-    if (position) {
-      fetchAirQualityForLocation(position[0], position[1]);
-      requestNotificationPermission();
-    }
-  }, [position]);
+    const cleanup = debouncedFetchAirQuality();
+    return cleanup;
+  }, [debouncedFetchAirQuality]);
 
   // Fetch air quality data for current location
   const fetchAirQualityForLocation = async (lat, lng) => {
@@ -98,9 +108,10 @@ const SimpleMap = forwardRef((props, ref) => {
 
   // Request notification permission
   const requestNotificationPermission = async () => {
-    if ('Notification' in window && Notification.permission === 'default') {
-      await Notification.requestPermission();
-    }
+    // Temporarily disabled to prevent layout issues
+    // if ('Notification' in window && Notification.permission === 'default') {
+    //   await Notification.requestPermission();
+    // }
   };
 
   // Handle location search
@@ -157,7 +168,7 @@ const SimpleMap = forwardRef((props, ref) => {
         </Marker>
         
         {/* Air Quality Markers */}
-        {airQualityData.map((aqData, index) => (
+        {airQualityData.length > 0 && airQualityData.map((aqData, index) => (
           <AirQualityMarker key={`${aqData.location}-${index}`} data={aqData} />
         ))}
       </MapContainer>

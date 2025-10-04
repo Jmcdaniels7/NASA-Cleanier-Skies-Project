@@ -42,8 +42,9 @@ body::before {
 }
 
 @keyframes sparkle {
-  from { transform: translateY(0px); }
-  to { transform: translateY(-100px); }
+  0% { transform: translateY(0px); opacity: 0.4; }
+  50% { opacity: 0.6; }
+  100% { transform: translateY(-100px); opacity: 0.4; }
 }
 
 .App {
@@ -63,6 +64,7 @@ body::before {
   justify-content: center;
   background: transparent;
   position: relative;
+  transform: none !important;
 }
 
 /* Custom scrollbar */

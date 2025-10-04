@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { Marker, Popup } from 'react-leaflet';
 import L from 'leaflet';
 import { getAQIColor, getAQICategory } from '../services/airQualityService';
@@ -35,7 +35,7 @@ const createAirQualityIcon = (pm25, aqiColor) => {
   });
 };
 
-const AirQualityMarker = ({ data }) => {
+const AirQualityMarker = memo(({ data }) => {
   const { coordinates, pm25, pm10, no2, o3, co, aqiColor, aqiCategory, healthRecommendation, location, city, country, lastUpdated } = data;
   
   const customIcon = createAirQualityIcon(pm25, aqiColor);
@@ -105,6 +105,8 @@ const AirQualityMarker = ({ data }) => {
       </Popup>
     </Marker>
   );
-};
+});
+
+AirQualityMarker.displayName = 'AirQualityMarker';
 
 export default AirQualityMarker;

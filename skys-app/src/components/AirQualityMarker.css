@@ -157,11 +157,11 @@
   }
 }
 
-/* Animation for markers */
+/* Animation for markers - disabled to prevent vibration */
 .air-quality-marker {
-  transition: transform 0.2s ease;
+  /* transition: transform 0.2s ease; */
 }
 
 .air-quality-marker:hover {
-  transform: scale(1.1);
+  /* transform: scale(1.1); */
 }

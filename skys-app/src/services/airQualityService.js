@@ -1,6 +1,7 @@
-// Air Quality Service for OpenAQ API integration
+// Air Quality Service using AQI CN API (free, no CORS issues)
 
-const OPENAQ_BASE_URL = 'https://api.openaq.org/v2';
+const AQI_API_BASE_URL = 'https://api.waqi.info/feed';
+const WAQI_TOKEN = process.env.REACT_APP_WAQI_API_KEY;
 
 // AQI color coding based on PM2.5 levels
 export const AQI_COLORS = {
@@ -48,44 +49,52 @@ export const getHealthRecommendation = (pm25) => {
 // Fetch air quality data for a specific location
 export const fetchAirQualityData = async (latitude, longitude, radius = 10000) => {
   try {
-    const url = `${OPENAQ_BASE_URL}/latest?coordinates=${latitude},${longitude}&radius=${radius}&limit=10`;
-    
+    // WAQI API uses geo coordinates directly
+    const url = `${AQI_API_BASE_URL}/geo:${latitude};${longitude}/?token=${WAQI_TOKEN}`;
+
     const response = await fetch(url);
+
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
-    
+
     const data = await response.json();
-    
-    // Process the data to extract relevant measurements
-    const processedData = data.results.map(location => {
-      const measurements = location.measurements || [];
-      
-      // Find PM2.5, PM10, NO2, O3, CO measurements
-      const pm25 = measurements.find(m => m.parameter === 'pm25');
-      const pm10 = measurements.find(m => m.parameter === 'pm10');
-      const no2 = measurements.find(m => m.parameter === 'no2');
-      const o3 = measurements.find(m => m.parameter === 'o3');
-      const co = measurements.find(m => m.parameter === 'co');
-      
-      return {
-        location: location.location,
-        coordinates: location.coordinates,
-        city: location.city,
-        country: location.country,
-        lastUpdated: location.lastUpdated,
-        pm25: pm25 ? pm25.value : null,
-        pm10: pm10 ? pm10.value : null,
-        no2: no2 ? no2.value : null,
-        o3: o3 ? o3.value : null,
-        co: co ? co.value : null,
-        aqiColor: getAQIColor(pm25 ? pm25.value : null),
-        aqiCategory: getAQICategory(pm25 ? pm25.value : null),
-        healthRecommendation: getHealthRecommendation(pm25 ? pm25.value : null)
-      };
-    });
-    
-    return processedData;
+
+    if (data.status !== 'ok' || !data.data) {
+      console.error('Invalid API response:', data);
+      return [];
+    }
+
+    const station = data.data;
+    const iaqi = station.iaqi || {};
+
+    // WAQI returns AQI values directly (0-500 scale)
+    // The main AQI is already calculated, use it directly
+    const mainAQI = station.aqi || 0;
+
+    // For display purposes, treat AQI values as PM2.5 equivalent
+    // AQI scale matches our color coding: 0-50 Good, 51-100 Moderate, etc.
+    const pm25Value = mainAQI;
+
+    return [{
+      location: station.city?.name || 'Unknown Station',
+      coordinates: {
+        latitude: station.city?.geo?.[0] || latitude,
+        longitude: station.city?.geo?.[1] || longitude
+      },
+      city: station.city?.name || 'Unknown',
+      country: station.city?.country || 'Unknown',
+      lastUpdated: station.time?.iso || new Date().toISOString(),
+      pm25: pm25Value,
+      pm10: iaqi.pm10?.v || null,
+      no2: iaqi.no2?.v || null,
+      o3: iaqi.o3?.v || null,
+      co: iaqi.co?.v || null,
+      aqi: mainAQI,
+      aqiColor: getAQIColor(pm25Value),
+      aqiCategory: getAQICategory(pm25Value),
+      healthRecommendation: getHealthRecommendation(pm25Value)
+    }];
   } catch (error) {
     console.error('Error fetching air quality data:', error);
     return [];
