@@ -1,17 +1,24 @@
-import logo from './logo.svg';
+import React, { useRef } from 'react';
 import './App.css';
-import testAPI from './components/testAPI';
+import SimpleMap from './SimpleMap';
+import SearchLocation from './SearchLocation';
 
 function App() {
+  const mapRef = useRef(null);
+
+  const handleLocationSelect = (coordinates, label) => {
+    // Pass the location to the map component
+    if (mapRef.current) {
+      mapRef.current.handleLocationSelect(coordinates, label);
+    }
+  };
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Test Air Quality Widget:
-          <testAPI />
-        </p>
-      </header>
+      <main className="App-main">
+        <SearchLocation onLocationSelect={handleLocationSelect} />
+        <SimpleMap ref={mapRef} />
+      </main>
     </div>
   );
 }
