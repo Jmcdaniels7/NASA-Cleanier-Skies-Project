@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, forwardRef, useImperativeHandle } from 'react';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
@@ -12,10 +12,11 @@ L.Icon.Default.mergeOptions({
   shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
 });
 
-const SimpleMap = () => {
+const SimpleMap = forwardRef((props, ref) => {
   const [position, setPosition] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const mapRef = useRef(null);
 
   // Default coordinates for New York City
   const defaultPosition = [40.7128, -74.0060];
@@ -50,6 +51,19 @@ const SimpleMap = () => {
     );
   }, [defaultPosition]);
 
+  // Handle location search
+  const handleLocationSelect = (coordinates, label) => {
+    setPosition(coordinates);
+    if (mapRef.current) {
+      mapRef.current.setView(coordinates, 13);
+    }
+  };
+
+  // Expose the handleLocationSelect method to parent components
+  useImperativeHandle(ref, () => ({
+    handleLocationSelect
+  }));
+
   if (isLoading) {
     return (
       <div className="map-loading">
@@ -72,6 +86,7 @@ const SimpleMap = () => {
   return (
     <div className="simple-map-container">
       <MapContainer
+        ref={mapRef}
         center={position}
         zoom={13}
         scrollWheelZoom={true}
@@ -94,6 +109,6 @@ const SimpleMap = () => {
       )}
     </div>
   );
-};
+});
 
 export default SimpleMap;
