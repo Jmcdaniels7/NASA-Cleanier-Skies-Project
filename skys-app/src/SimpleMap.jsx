@@ -5,6 +5,7 @@ import 'leaflet/dist/leaflet.css';
 import './SimpleMap.css';
 import AirQualityMarker from './components/AirQualityMarker';
 import { fetchAirQualityData, getAirQualitySummary, isDangerousAirQuality } from './services/airQualityService';
+import MeteomaticsDemo from './components/MeteomaticsDemo';
 
 // Fix for default markers in react-leaflet
 delete L.Icon.Default.prototype._getIconUrl;
@@ -217,6 +218,8 @@ const SimpleMap = forwardRef((props, ref) => {
           </div>
         </div>
       )}
+      {/* Meteomatics Humidity panel placed below Air Quality */}
+      <MeteomaticsDemo lat={position[0]} lon={position[1]} />
     </div>
   );
 });
