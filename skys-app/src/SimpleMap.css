@@ -1,0 +1,358 @@
+/* SimpleMap Component Styles */
+
+.simple-map-container {
+  width: 90%;
+  max-width: 1200px;
+  margin: 0 auto;
+  position: relative;
+  margin-top: 0;
+}
+
+.simple-map {
+  width: 100%;
+  height: 600px;
+  border-radius: 20px;
+  box-shadow: 
+    0 25px 50px rgba(0, 0, 0, 0.6),
+    0 10px 20px rgba(0, 0, 0, 0.4),
+    0 0 0 1px rgba(255, 255, 255, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  overflow: hidden;
+  backdrop-filter: blur(15px);
+  border: 2px solid rgba(255, 255, 255, 0.15);
+  position: relative;
+  transform: none !important;
+}
+
+.simple-map:hover {
+  box-shadow: 
+    0 35px 70px rgba(0, 0, 0, 0.7),
+    0 15px 30px rgba(0, 0, 0, 0.5),
+    0 0 0 1px rgba(255, 255, 255, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3),
+    0 0 30px rgba(120, 219, 255, 0.3);
+}
+
+/* Loading state styles */
+.map-loading {
+  width: 100%;
+  height: 600px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, 
+    rgba(255, 255, 255, 0.05) 0%, 
+    rgba(255, 255, 255, 0.02) 100%);
+  border-radius: 20px;
+  box-shadow: 
+    0 25px 50px rgba(0, 0, 0, 0.6),
+    0 10px 20px rgba(0, 0, 0, 0.4),
+    0 0 0 1px rgba(255, 255, 255, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(15px);
+  border: 2px solid rgba(255, 255, 255, 0.15);
+}
+
+.loading-content {
+  text-align: center;
+  color: rgba(255, 255, 255, 0.9);
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.loading-spinner {
+  width: 60px;
+  height: 60px;
+  border: 4px solid rgba(255, 255, 255, 0.2);
+  border-top: 4px solid #ffffff;
+  border-radius: 50%;
+  /* animation: spin 1s linear infinite; */
+  margin: 0 auto 24px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.loading-content p {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0;
+  letter-spacing: 0.5px;
+}
+
+/* Error state styles */
+.map-error {
+  width: 100%;
+  height: 600px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, 
+    rgba(254, 215, 215, 0.8) 0%, 
+    rgba(254, 215, 215, 0.6) 100%);
+  border-radius: 20px;
+  box-shadow: 
+    0 25px 50px rgba(0, 0, 0, 0.25),
+    0 10px 20px rgba(0, 0, 0, 0.15),
+    0 0 0 1px rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.map-error p {
+  color: rgba(197, 48, 48, 0.9);
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Warning message styles */
+.map-warning {
+  margin-top: 16px;
+  padding: 16px 20px;
+  background: linear-gradient(135deg, 
+    rgba(254, 245, 231, 0.9) 0%, 
+    rgba(254, 245, 231, 0.7) 100%);
+  border: 1px solid rgba(246, 224, 94, 0.5);
+  border-radius: 12px;
+  color: rgba(116, 66, 16, 0.9);
+  font-size: 14px;
+  text-align: center;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.map-warning p {
+  margin: 0;
+  font-weight: 500;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .simple-map-container {
+    width: 95%;
+  }
+  
+  .simple-map {
+    height: 500px;
+    border-radius: 16px;
+  }
+  
+  .map-loading,
+  .map-error {
+    height: 500px;
+    border-radius: 16px;
+  }
+  
+  .loading-content p {
+    font-size: 16px;
+  }
+  
+  .loading-spinner {
+    width: 50px;
+    height: 50px;
+    margin: 0 auto 20px;
+  }
+  
+  .map-warning {
+    font-size: 13px;
+    padding: 12px 16px;
+    margin-top: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .simple-map-container {
+    width: 98%;
+  }
+  
+  .simple-map {
+    height: 400px;
+    border-radius: 12px;
+  }
+  
+  .map-loading,
+  .map-error {
+    height: 400px;
+    border-radius: 12px;
+  }
+  
+  .loading-content p {
+    font-size: 14px;
+  }
+  
+  .loading-spinner {
+    width: 40px;
+    height: 40px;
+    margin: 0 auto 16px;
+  }
+  
+  .map-warning {
+    font-size: 12px;
+    padding: 10px 12px;
+    margin-top: 10px;
+  }
+}
+
+/* Custom Leaflet popup styling */
+.leaflet-popup-content-wrapper {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.leaflet-popup-content {
+  margin: 12px 16px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+  text-align: center;
+}
+
+.leaflet-popup-tip {
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+/* Air Quality Status Styles */
+.air-quality-status {
+  margin-top: 16px;
+  padding: 16px 20px;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(10px);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+}
+
+.air-quality-status.loading {
+  text-align: center;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.air-quality-status.error {
+  background: rgba(254, 215, 215, 0.8);
+  border-color: rgba(197, 48, 48, 0.3);
+  color: rgba(197, 48, 48, 0.9);
+}
+
+.status-spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-top: 2px solid rgba(120, 219, 255, 0.8);
+  border-radius: 50%;
+  /* animation: spin 1s linear infinite; */
+  margin: 0 auto 8px;
+}
+
+.status-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.status-header h4 {
+  margin: 0;
+  color: white;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.sensor-count {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.status-summary {
+  color: white;
+}
+
+.summary-card {
+  text-align: center;
+}
+
+.summary-indicator {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-bottom: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.summary-value {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 4px;
+}
+
+.summary-category {
+  font-size: 12px;
+  font-weight: 500;
+  opacity: 0.9;
+}
+
+.summary-message {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.4;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.no-data {
+  text-align: center;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.no-data p {
+  margin: 0;
+  font-size: 14px;
+}
+
+/* Responsive design for air quality status */
+@media (max-width: 768px) {
+  .air-quality-status {
+    padding: 12px 16px;
+    margin-top: 12px;
+  }
+  
+  .status-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+  
+  .status-header h4 {
+    font-size: 14px;
+  }
+  
+  .summary-value {
+    font-size: 16px;
+  }
+  
+  .summary-message {
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .air-quality-status {
+    padding: 10px 12px;
+    margin-top: 10px;
+  }
+  
+  .summary-indicator {
+    padding: 10px 12px;
+  }
+}

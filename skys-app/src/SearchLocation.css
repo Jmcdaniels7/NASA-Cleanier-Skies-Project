@@ -1,0 +1,222 @@
+/* SearchLocation Component Styles */
+
+.search-location-container {
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 500px;
+  z-index: 1000;
+}
+
+.search-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(15px);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 25px;
+  padding: 12px 20px;
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.3),
+    0 0 0 1px rgba(255, 255, 255, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  /* transition: all 0.3s ease; */
+}
+
+.search-input-wrapper:focus-within {
+  border-color: rgba(120, 219, 255, 0.6);
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.4),
+    0 0 0 1px rgba(120, 219, 255, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3),
+    0 0 20px rgba(120, 219, 255, 0.2);
+  transform: translateY(-2px);
+}
+
+.search-icon {
+  color: rgba(255, 255, 255, 0.7);
+  margin-right: 12px;
+  display: flex;
+  align-items: center;
+  transition: color 0.3s ease;
+}
+
+.search-input-wrapper:focus-within .search-icon {
+  color: rgba(120, 219, 255, 0.9);
+}
+
+.search-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: white;
+  font-size: 16px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+}
+
+.search-input::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+  font-weight: 400;
+}
+
+.loading-spinner {
+  margin-left: 12px;
+  display: flex;
+  align-items: center;
+}
+
+.spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-top: 2px solid rgba(120, 219, 255, 0.8);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Search Results */
+.search-results {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(15px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 15px;
+  margin-top: 8px;
+  box-shadow: 
+    0 20px 40px rgba(0, 0, 0, 0.5),
+    0 0 0 1px rgba(255, 255, 255, 0.1);
+  overflow: hidden;
+  animation: slideDown 0.2s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.search-result-item {
+  display: flex;
+  align-items: center;
+  padding: 12px 16px;
+  cursor: pointer;
+  /* transition: all 0.2s ease; */
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.search-result-item:last-child {
+  border-bottom: none;
+}
+
+.search-result-item:hover,
+.search-result-item.selected {
+  background: rgba(120, 219, 255, 0.1);
+  border-left: 3px solid rgba(120, 219, 255, 0.6);
+}
+
+.result-icon {
+  color: rgba(255, 255, 255, 0.6);
+  margin-right: 12px;
+  display: flex;
+  align-items: center;
+}
+
+.search-result-item:hover .result-icon,
+.search-result-item.selected .result-icon {
+  color: rgba(120, 219, 255, 0.9);
+}
+
+.result-content {
+  flex: 1;
+}
+
+.result-label {
+  color: white;
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 2px;
+  line-height: 1.3;
+}
+
+.result-type {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 12px;
+  font-weight: 400;
+  text-transform: capitalize;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .search-location-container {
+    max-width: 90%;
+    top: 15px;
+  }
+  
+  .search-input-wrapper {
+    padding: 10px 16px;
+    border-radius: 20px;
+  }
+  
+  .search-input {
+    font-size: 14px;
+  }
+  
+  .search-results {
+    border-radius: 12px;
+  }
+  
+  .search-result-item {
+    padding: 10px 14px;
+  }
+  
+  .result-label {
+    font-size: 13px;
+  }
+  
+  .result-type {
+    font-size: 11px;
+  }
+}
+
+@media (max-width: 480px) {
+  .search-location-container {
+    max-width: 95%;
+    top: 12px;
+  }
+  
+  .search-input-wrapper {
+    padding: 8px 14px;
+    border-radius: 18px;
+  }
+  
+  .search-input {
+    font-size: 13px;
+  }
+  
+  .search-icon {
+    margin-right: 10px;
+  }
+  
+  .search-icon svg {
+    width: 18px;
+    height: 18px;
+  }
+}
