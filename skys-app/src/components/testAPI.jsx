@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
-function AirQualityWidget() {
+function testAPI() {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -53,4 +53,4 @@ function AirQualityWidget() {
   );
 }
 
-export default AirQualityWidget;
+export default testAPI;

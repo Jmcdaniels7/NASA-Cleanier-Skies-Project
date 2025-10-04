@@ -1,6 +1,6 @@
 import logo from './logo.svg';
 import './App.css';
-import AirQualityWidget from './components/AirQualityWidget';
+import testAPI from './components/testAPI';
 
 function App() {
   return (
@@ -9,7 +9,7 @@ function App() {
         <img src={logo} className="App-logo" alt="logo" />
         <p>
           Test Air Quality Widget:
-          <AirQualityWidget />
+          <testAPI />
         </p>
       </header>
     </div>
