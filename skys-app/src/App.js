@@ -4,6 +4,8 @@ import SimpleMap from './SimpleMap';
 import SearchLocation from './SearchLocation';
 import OptinAlert from './components/alert';
 import Prediction from './components/Prediction';
+import AboutSection from './components/AboutSection'; 
+
 
 function App() {
   const mapRef = useRef(null);
@@ -24,6 +26,7 @@ function App() {
         <OptinAlert apiUrl={process.env.REACT_APP_API_URL} />
       </div>
       <main className="App-main">
+        <AboutSection />
   <div className="searchable-map-container">
   <SearchLocation onLocationSelect={handleLocationSelect} />
   <SimpleMap ref={mapRef} onPositionChange={setSelectedLocation} />

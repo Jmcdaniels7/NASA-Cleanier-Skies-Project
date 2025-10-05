@@ -1,0 +1,27 @@
+.about-section {
+    margin: 2rem 0;
+    color: white;
+}
+
+.about-section h1 {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+
+    text-shadow: 0 1px 4px rgba(255, 255, 255, 0.2);
+}
+
+.about-content {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-left: 0.25rem;
+    max-width: 60rem;
+    word-break: none;
+    text-wrap: wrap;
+}
+
+.about-content p{
+    font-size: 1.1rem;
+    font-weight: 500;
+    line-height: 1.6;
+}

@@ -75,7 +75,7 @@ body::before {
   box-shadow: 0 6px 18px rgba(2,6,23,0.16);
   border: 1px solid rgba(255,255,255,0.06);
   z-index: 1400;
-  width: min(720px, 100%);
+  width: fit-content;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -84,6 +84,7 @@ body::before {
 
 /* Overlay variant: keeps the old fixed/centered overlay behavior when needed */
 .optin-alert.fixed {
+  vertical-align: middle;
   position: fixed;
   left: 50%;
   transform: translateX(-50%);
