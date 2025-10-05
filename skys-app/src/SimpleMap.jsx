@@ -204,7 +204,10 @@ const SimpleMap = forwardRef((props, ref) => {
         <div className="map-overlays">
           {/* Air Quality Markers */}
         {airQualityData.length > 0 && airQualityData.map((aqData, index) => (
-          <AirQualityMarker key={`${aqData.location}-${index}`} data={aqData} />
+          <AirQualityMarker
+            key={`${aqData.location}-${index}`}
+            data={{...aqData, coordinates: {latitude: position[0], longitude: position[1]}}}
+          />
         ))}
 
         {/* AQI Box Inside Map - Top Left - Only when data exists */}

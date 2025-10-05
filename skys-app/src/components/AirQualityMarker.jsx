@@ -40,9 +40,9 @@ const AirQualityMarker = memo(({ data }) => {
 
   const customIcon = createAirQualityIcon(pm25, aqiColor);
 
-  // Offset marker slightly to avoid overlapping with location marker
-  const offsetLat = coordinates.latitude + 0.001;
-  const offsetLng = coordinates.longitude + 0.001;
+  // Offset marker very slightly to avoid overlapping with location marker
+  const offsetLat = coordinates.latitude + 0.00005;
+  const offsetLng = coordinates.longitude + 0.00005;
 
   const formatValue = (value, unit = 'μg/m³') => {
     if (value === null || value === undefined) return 'No data';
