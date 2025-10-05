@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, forwardRef, useImperativeHandle, useCallback } from 'react';
-import { MapContainer, TileLayer, Marker, Popup, useMapEvents } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Popup, useMapEvents, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import './SimpleMap.css';
@@ -26,6 +26,7 @@ function MapClickHandler({ onMapClick }) {
   return null;
 }
 
+
 const SimpleMap = forwardRef((props, ref) => {
   const [position, setPosition] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -34,18 +35,10 @@ const SimpleMap = forwardRef((props, ref) => {
   const [airQualityLoading, setAirQualityLoading] = useState(false);
   const [airQualityError, setAirQualityError] = useState(null);
   const mapRef = useRef(null);
+  const aqiBoxRef = useRef(null);
+  const meteomaticsBoxRef = useRef(null);
 
   const [isShowMore, setIsShowMore] = useState(false);
-
-    const collapseClick = (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      setIsShowMore(!isShowMore);
-    };
-
-  useEffect(() => {
-    console.log('isShowMore changed to:', isShowMore);
-  }, [isShowMore]);
 
   useEffect(() => {
 
@@ -204,59 +197,64 @@ const SimpleMap = forwardRef((props, ref) => {
           </Popup>
         </Marker>
 
-        <div className="map-overlays">
-          {/* Air Quality Markers */}
+        {/* Air Quality Markers */}
         {airQualityData.length > 0 && airQualityData.map((aqData, index) => (
           <AirQualityMarker
             key={`${aqData.location}-${index}`}
             data={{...aqData, coordinates: {latitude: position[0], longitude: position[1]}}}
           />
         ))}
-        </div>
-
-        {/* AQI Box - Top Left - Outside map-overlays so button works */}
-        {(airQualityLoading || airQualityData.length > 0) && (
-          <div style={{position: 'absolute', top: '10px', left: '10px', zIndex: 1000}}>
-            {airQualityLoading ? (
-              <div className="aqi-compact-card loading">
-                <div className="aqi-loading-spinner"></div>
-                <p style={{ color: 'white', margin: 0, fontSize: '13px' }}>Loading...</p>
-              </div>
-            ) : airQualityData.length > 0 && getAirQualitySummary(airQualityData).status !== 'No Data' ? (
-              <div className="aqi-compact-card" onClick={(e) => e.stopPropagation()}>
-                <div className="aqi-compact-indicator" style={{ backgroundColor: getAirQualitySummary(airQualityData).color }}>
-                  <span className="aqi-compact-value">
-                    {getAirQualitySummary(airQualityData).pm25 ? Math.round(getAirQualitySummary(airQualityData).pm25) : '?'}
-                  </span>
-                  <span className="aqi-compact-label">AQI</span>
-                </div>
-                <div className="aqi-compact-info">
-                  <div className="aqi-compact-status">{getAirQualitySummary(airQualityData).status}</div>
-                  <div className="aqi-compact-location">{airQualityData[0]?.city || 'Unknown'}</div>
-                </div>
-                <button
-                  type="button"
-                  className="show-more-info"
-                  onMouseDown={collapseClick}
-                  style={{position: 'relative', zIndex: 9999}}
-                >
-                  {isShowMore ? '\u21D1 Collapse' : '\u21D3 More Info'}
-                </button>
-              </div>
-            ) : null}
-          </div>
-        )}
-
-        {/* Meteomatics demo panel (humidity + wind) - Below AQI box */}
-        {isShowMore && position && (
-          <div style={{position: 'absolute', top: '90px', left: '10px', zIndex: 1000}}>
-            <MeteomaticsDemo lat={position[0]} lon={position[1]} />
-          </div>
-        )}
-
-        {/* News Section Overlay - Bottom Left */}
-        <NewsSection />
       </MapContainer>
+
+      {/* AQI Box - Outside MapContainer */}
+      {(airQualityLoading || airQualityData.length > 0) && (
+        <div
+          ref={aqiBoxRef}
+          className="map-overlay-ui aqi-overlay"
+        >
+          {airQualityLoading ? (
+            <div className="aqi-compact-card loading">
+              <div className="aqi-loading-spinner"></div>
+              <p style={{ color: 'white', margin: 0, fontSize: '13px' }}>Loading...</p>
+            </div>
+          ) : airQualityData.length > 0 && getAirQualitySummary(airQualityData).status !== 'No Data' ? (
+            <div className="aqi-compact-card">
+              <div className="aqi-compact-indicator" style={{ backgroundColor: getAirQualitySummary(airQualityData).color }}>
+                <span className="aqi-compact-value">
+                  {getAirQualitySummary(airQualityData).pm25 ? Math.round(getAirQualitySummary(airQualityData).pm25) : '?'}
+                </span>
+                <span className="aqi-compact-label">AQI</span>
+              </div>
+              <div className="aqi-compact-info">
+                <div className="aqi-compact-status">{getAirQualitySummary(airQualityData).status}</div>
+                <div className="aqi-compact-location">{airQualityData[0]?.city || 'Unknown'}</div>
+              </div>
+              <button
+                type="button"
+                className="show-more-info"
+                onClick={(e) => {
+                  e.preventDefault();
+                  setIsShowMore(!isShowMore);
+                }}
+              >
+                {isShowMore ? '\u21D1 Collapse' : '\u21D3 More Info'}
+              </button>
+            </div>
+          ) : null}
+        </div>
+      )}
+
+      {/* Meteomatics demo panel - Outside MapContainer */}
+      {isShowMore && position && (
+        <div ref={meteomaticsBoxRef} className="map-overlay-ui meteomatics-overlay">
+          <MeteomaticsDemo lat={position[0]} lon={position[1]} />
+        </div>
+      )}
+
+      {/* News Section - Outside MapContainer */}
+      <div className="map-overlay-ui news-overlay">
+        <NewsSection />
+      </div>
     </div>
   );
 });
