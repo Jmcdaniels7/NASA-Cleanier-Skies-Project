@@ -41,7 +41,7 @@ export default function Prediction({ location }) {
   })();
 
   return (
-  <div className="air-quality-status" style={{ width: 'min(960px, 94%)', margin: '0 auto', padding: '12px 16px' }}>
+  <div className="air-quality-status">
       <div className={`status-header ${loading ? 'loading' : ''}`}>
         <h4 style={{ color: 'white', margin: 0 }}>Predicted air quality</h4>
       </div>

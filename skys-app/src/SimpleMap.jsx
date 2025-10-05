@@ -227,7 +227,8 @@ const SimpleMap = forwardRef((props, ref) => {
         ))}
       </MapContainer>
 
-      {/* AQI Box - Outside MapContainer */}
+      <div className="map-overlays">
+        {/* AQI Box - Outside MapContainer */}
       {(airQualityLoading || airQualityData.length > 0) && (
         <div
           ref={aqiBoxRef}
@@ -267,11 +268,12 @@ const SimpleMap = forwardRef((props, ref) => {
 
         {/* Meteomatics demo panel (humidity + wind) - Below AQI box */}
         {isShowMore && position && (
-          <div style={{position: 'absolute', top: '90px', left: '10px', zIndex: 1000}}>
+          <div>
             <MeteomaticsDemo lat={position[0]} lon={position[1]} />
           </div>
         )}
-
+      </div>
+      
         {/* News Section Overlay - Bottom Left */}
         <NewsSection />
       </div>

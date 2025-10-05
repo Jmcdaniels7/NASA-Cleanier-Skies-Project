@@ -128,8 +128,8 @@ function OptinAlert({ onSubscribe, apiUrl: apiUrlProp }) {
         alignItems: 'center',
         gap: 8,
         width: '100%',
-        maxWidth: 720,
-        flexWrap: 'wrap'
+        maxWidth: 800,
+        flexWrap: 'wrap',
       }}
     >
       <TextField
@@ -228,7 +228,7 @@ function OptinAlert({ onSubscribe, apiUrl: apiUrlProp }) {
     display: 'flex',
     alignItems: 'flex-start',
     // only add extra space when the component is open so the fixed toggle doesn't overlap content
-    ...(hidden ? { minHeight: 48 } : { paddingTop: 56, paddingRight: 56 }),
+    ...(hidden ? { minHeight: 48 } : { paddingTop: 10, paddingRight: 10}),
   };
 
   return (
