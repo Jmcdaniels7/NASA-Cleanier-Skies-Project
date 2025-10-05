@@ -4,19 +4,13 @@ import Meteomatics from '../services/meteomaticsService';
 export default function MeteomaticsDemo({ lat, lon }) {
   const [loading, setLoading] = useState(false);
   const [humidity, setHumidity] = useState(null);
-  const [timestamp, setTimestamp] = useState(null);
-  const [rawWarnings, setRawWarnings] = useState(null);
-  const [warnings, setWarnings] = useState(null); // kept for compatibility if other code references it
   const [windData, setWindData] = useState(null);
-  const [showRaw, setShowRaw] = useState(false);
-  const [lastRequest, setLastRequest] = useState(null);
   const [error, setError] = useState(null);
 
   const fetchHumidity = async (location) => {
-    setLoading(true);
-    setError(null);
-    setHumidity(null);
-    setTimestamp(null);
+  setLoading(true);
+  setError(null);
+  setHumidity(null);
 
     try {
       const param = Meteomatics.relativeHumidityInstant('2m');
@@ -34,13 +28,12 @@ export default function MeteomaticsDemo({ lat, lon }) {
       if (parsed && Array.isArray(parsed.series) && parsed.series.length > 0) {
         const latest = parsed.series[parsed.series.length - 1];
         setHumidity(latest.value);
-        setTimestamp(latest.date);
       } else if (parsed && parsed.raw) {
         setError('No timeseries data returned');
       } else {
         setError('No data');
       }
-      // fetch only the three parameters we care about: speed, direction, gusts
+      // fetch only the three parameters: speed, direction, gusts
       const windParams = [
         Meteomatics.windSpeed('10m', 'ms'),
         Meteomatics.windDirection('10m'),
@@ -63,15 +56,7 @@ export default function MeteomaticsDemo({ lat, lon }) {
           format: 'json'
         };
 
-        try {
-          const windUrl = Meteomatics.buildMeteomaticsUrl(windOptions);
-          setLastRequest({ url: windUrl, time: new Date().toISOString() });
-        } catch (e) {
-          setLastRequest({ url: 'build-url-failed', error: String(e), time: new Date().toISOString() });
-        }
-
         const windJson = await Meteomatics.fetchMeteomaticsJson(windOptions);
-        setRawWarnings(windJson);
         console.debug('Meteomatics wind raw:', windJson);
 
         if (windJson && Array.isArray(windJson.data) && windJson.data.length > 0) {
@@ -126,7 +111,6 @@ export default function MeteomaticsDemo({ lat, lon }) {
         setWindData(windDataMap);
       } catch (werr) {
         console.warn('Wind fetch failed', werr);
-        setRawWarnings({ error: String(werr) });
         setWindData(windDataMap);
       }
     } catch (err) {
@@ -136,19 +120,6 @@ export default function MeteomaticsDemo({ lat, lon }) {
     }
   };
 
-  const handleToggleRaw = () => {
-    console.debug('toggle raw warnings, previous:', showRaw);
-    setShowRaw(v => {
-      const next = !v;
-      console.debug('showRaw now', next);
-      return next;
-    });
-  };
-
-  const handleRefresh = () => {
-    console.debug('refresh clicked, lat/lon:', lat, lon);
-    fetchHumidity((lat != null && lon != null) ? { lat, lon } : { lat: 52.520551, lon: 13.461804 });
-  };
 
   // Auto-fetch when position changes
   useEffect(() => {
@@ -164,38 +135,17 @@ export default function MeteomaticsDemo({ lat, lon }) {
     return `${Math.round(humidity)} %`;
   };
 
-  const displayTime = () => {
-    if (!timestamp) return '';
-    try {
-      return new Date(timestamp).toLocaleString();
-    } catch (e) {
-      return timestamp;
-    }
-  };
-
   return (
     <div style={{ padding: 12, border: '1px solid #ddd', margin: 8, borderRadius: 6, background: '#fff' }}>
-      <h4 style={{ margin: '0 0 8px 0' }}>Humidity (2m)</h4>
+      <h4 style={{ margin: '0 0 8px 0' }}>Humidity</h4>
       <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
         <div style={{ fontSize: 28, fontWeight: '700' }}>{displayHumidity()}</div>
-        <div style={{ color: '#666' }}>{timestamp ? `as of ${displayTime()}` : '—'}</div>
-      </div>
-      <div style={{ marginTop: 8 }}>
-        <button onClick={() => fetchHumidity((lat != null && lon != null) ? { lat, lon } : { lat: 52.520551, lon: 13.461804 })} disabled={loading}>
-          {loading ? 'Fetching…' : 'Refresh'}
-        </button>
       </div>
       {/* Wind panel */}
       <div style={{ marginTop: 12 }}>
         <h5 style={{ margin: '8px 0' }}>Wind</h5>
         <div style={{ marginBottom: 8, display: 'flex', gap: 8, alignItems: 'center' }}>
-          <button onClick={handleToggleRaw} style={{ fontSize: 12 }}>
-            {showRaw ? 'Hide raw response' : 'Show raw response'}
-          </button>
-          <button onClick={handleRefresh} style={{ fontSize: 12 }} disabled={loading}>
-            Refresh
-          </button>
-          <span style={{ marginLeft: 8, color: '#666', fontSize: 12 }}>{loading ? 'Loading...' : (rawWarnings ? 'Raw available' : 'No raw')}</span>
+          <span style={{ marginLeft: 8, color: '#666', fontSize: 12 }}>{loading ? 'Loading...' : ''}</span>
         </div>
 
         {!windData && <div style={{ color: '#666' }}>No wind data</div>}
@@ -220,15 +170,6 @@ export default function MeteomaticsDemo({ lat, lon }) {
               });
             })()}
           </div>
-        )}
-        {lastRequest && (
-          <div style={{ marginTop: 8, color: '#666', fontSize: 12 }}>
-            Last request: <code style={{ display: 'inline-block', maxWidth: '100%', overflow: 'hidden', textOverflow: 'ellipsis' }}>{lastRequest.url}</code>
-            <div style={{ fontSize: 11, color: '#999' }}>{lastRequest.time}{lastRequest.error ? ` — error: ${lastRequest.error}` : ''}</div>
-          </div>
-        )}
-        {showRaw && rawWarnings && (
-          <pre style={{ marginTop: 8, maxHeight: 240, overflow: 'auto', background: '#111', color: '#dcdcdc', padding: 8, borderRadius: 6 }}>{JSON.stringify(rawWarnings, null, 2)}</pre>
         )}
       </div>
     </div>
