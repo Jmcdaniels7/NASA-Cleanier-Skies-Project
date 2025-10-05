@@ -1,10 +1,20 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import L from 'leaflet';
 import './NewsSection.css';
 
 const NewsSection = () => {
   const [articles, setArticles] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  const ref = useRef(null);
+
+  const [isNewsVisible, setIsNewsVisible] = useState(true);
+
+  const collapseClick = (event) => {
+    event.stopPropagation();
+    setIsNewsVisible (!isNewsVisible);
+  };
 
   const NEWS_API_KEY = process.env.REACT_APP_NEWS_API_KEY;
 
@@ -53,7 +63,7 @@ const NewsSection = () => {
     return (
       <div className="news-section">
         <div className="news-header">
-          <h2>📰 Air Quality News & Insights</h2>
+          <h2>Air Quality News & Insights</h2>
         </div>
         <div className="news-loading">
           <div className="news-spinner"></div>
@@ -67,7 +77,7 @@ const NewsSection = () => {
     return (
       <div className="news-section">
         <div className="news-header">
-          <h2>📰 Air Quality News & Insights</h2>
+          <h2>Air Quality News & Insights</h2>
         </div>
         <div className="news-error">
           <p>{error}</p>
@@ -79,9 +89,10 @@ const NewsSection = () => {
   return (
     <div className="news-section">
       <div className="news-header">
-        <h2>🌍 Climate News</h2>
+        <h2>Climate News</h2>
+        <button onClick={collapseClick}>{isNewsVisible ? '\u21D3 Show Less' : '\u21D1 Show More'}</button>
       </div>
-
+      {isNewsVisible && (
       <div className="news-grid">
         {articles.slice(0, 5).map((article, index) => (
           <a
@@ -101,6 +112,7 @@ const NewsSection = () => {
           </a>
         ))}
       </div>
+      )}
     </div>
   );
 };

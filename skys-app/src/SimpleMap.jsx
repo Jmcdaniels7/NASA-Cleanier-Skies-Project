@@ -35,7 +35,18 @@ const SimpleMap = forwardRef((props, ref) => {
   const [airQualityError, setAirQualityError] = useState(null);
   const mapRef = useRef(null);
 
+  const [isShowMore, setIsShowMore] = useState(false);
+  
+    const collapseClick = () => {
+      //debug statement, delete later
+      console.log('Collapse clicked');
+      
+      setIsShowMore (!isShowMore);
+    };
+
   useEffect(() => {
+
+
     // Default coordinates for New York City
     const defaultPosition = [40.7128, -74.0060];
 
@@ -190,7 +201,8 @@ const SimpleMap = forwardRef((props, ref) => {
           </Popup>
         </Marker>
 
-        {/* Air Quality Markers */}
+        <div className="map-overlays">
+          {/* Air Quality Markers */}
         {airQualityData.length > 0 && airQualityData.map((aqData, index) => (
           <AirQualityMarker key={`${aqData.location}-${index}`} data={aqData} />
         ))}
@@ -215,65 +227,26 @@ const SimpleMap = forwardRef((props, ref) => {
                   <div className="aqi-compact-status">{getAirQualitySummary(airQualityData).status}</div>
                   <div className="aqi-compact-location">{airQualityData[0]?.city || 'Unknown'}</div>
                 </div>
+                <button className="show-more-info" onClick={collapseClick}>{isShowMore ? '\u21D1 Collapse' : '\u21D3 More Info'}</button>
               </div>
             ) : null}
           </div>
         )}
 
+        
+        {/* Meteomatics demo panel (humidity + wind) */}
+        
+        { isShowMore && position && (
+          <div style={{zIndex: 1000}}>
+            <MeteomaticsDemo lat={position[0]} lon={position[1]} />
+            </div>
+        )}
+        
+        </div>
+          
         {/* News Section Overlay - Below AQI box */}
         <NewsSection />
       </MapContainer>
-      {error && (
-        <div className="map-warning">
-          <p>{error}. Using default location (New York City).</p>
-        </div>
-      )}
-      {/* Meteomatics demo panel (humidity + wind) */}
-      {position && (
-        <div style={{ position: 'absolute', right: 12, top: 12, zIndex: 4000 }}>
-          <MeteomaticsDemo lat={position[0]} lon={position[1]} />
-        </div>
-      )}
-      
-      {/* Air Quality Status */}
-      {airQualityLoading && (
-        <div className="air-quality-status loading">
-          <div className="status-spinner"></div>
-          <p>Loading air quality data...</p>
-        </div>
-      )}
-      
-      {airQualityError && (
-        <div className="air-quality-status error">
-          <p>{airQualityError}</p>
-        </div>
-      )}
-      
-      {!airQualityLoading && !airQualityError && airQualityData.length > 0 && (
-        <div className="air-quality-status">
-          <div className="status-header">
-            <h4>🌫️ Air Quality Status</h4>
-            <span className="sensor-count">{airQualityData.length} sensor{airQualityData.length !== 1 ? 's' : ''} nearby</span>
-          </div>
-          <div className="status-summary">
-            {getAirQualitySummary(airQualityData).status !== 'No Data' ? (
-              <div className="summary-card">
-                <div className="summary-indicator" style={{ backgroundColor: getAirQualitySummary(airQualityData).color }}>
-                  <span className="summary-value">
-                    {getAirQualitySummary(airQualityData).pm25 ? Math.round(getAirQualitySummary(airQualityData).pm25) : '?'} μg/m³
-                  </span>
-                  <span className="summary-category">{getAirQualitySummary(airQualityData).status}</span>
-                </div>
-                <p className="summary-message">{getAirQualitySummary(airQualityData).message}</p>
-              </div>
-            ) : (
-              <div className="no-data">
-                <p>No air quality data available for this area</p>
-              </div>
-            )}
-          </div>
-        </div>
-      )}
     </div>
   );
 });

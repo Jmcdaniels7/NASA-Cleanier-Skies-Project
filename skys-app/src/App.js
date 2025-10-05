@@ -17,8 +17,10 @@ function App() {
   return (
     <div className="App">
       <main className="App-main">
+        <div className="searchable-map-container">
         <SearchLocation onLocationSelect={handleLocationSelect} />
-  <SimpleMap ref={mapRef} />
+        <SimpleMap ref={mapRef} />
+        </div>
       </main>
     </div>
   );

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Meteomatics from '../services/meteomaticsService';
+import './MeteomaticsDemo.css';
 
 export default function MeteomaticsDemo({ lat, lon }) {
   const [loading, setLoading] = useState(false);
@@ -132,25 +133,27 @@ export default function MeteomaticsDemo({ lat, lon }) {
     if (loading) return 'Loading...';
     if (error) return `Error: ${error}`;
     if (humidity == null) return 'No data';
-    return `${Math.round(humidity)} %`;
+    return `${Math.round(humidity)}%`;
   };
 
   return (
-    <div style={{ padding: 12, border: '1px solid #ddd', margin: 8, borderRadius: 6, background: '#fff' }}>
-      <h4 style={{ margin: '0 0 8px 0' }}>Humidity</h4>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-        <div style={{ fontSize: 28, fontWeight: '700' }}>{displayHumidity()}</div>
-      </div>
+    <div className="more-details-container">
+      <div className="humidity-display">
+        <h4>Humidity</h4>
+        <div>
+          <p className="humidity-value">{displayHumidity()}</p>
+          </div>
+          </div>
       {/* Wind panel */}
-      <div style={{ marginTop: 12 }}>
-        <h5 style={{ margin: '8px 0' }}>Wind</h5>
-        <div style={{ marginBottom: 8, display: 'flex', gap: 8, alignItems: 'center' }}>
-          <span style={{ marginLeft: 8, color: '#666', fontSize: 12 }}>{loading ? 'Loading...' : ''}</span>
+      <div>
+        <h4>Wind</h4>
+        <div>
+          <span>{loading ? 'Loading...' : ''}</span>
         </div>
 
-        {!windData && <div style={{ color: '#666' }}>No wind data</div>}
+        {!windData && <div>No wind data</div>}
         {windData && (
-          <div style={{ display: 'flex', gap: 8, flexDirection: 'column', flexWrap: 'wrap' }}>
+          <div>
             {(() => {
               const labelMap = {
                 [Meteomatics.windSpeed('10m','ms')]: 'Wind speed (10m) [m/s]',
@@ -162,9 +165,9 @@ export default function MeteomaticsDemo({ lat, lon }) {
                 const label = labelMap[key] || key.replace(/[:_]/g, ' ');
                 const display = value == null ? '—' : String(value);
                 return (
-                  <div key={key} style={{ padding: 6, borderRadius: 4, background: '#fafafa', minWidth: 220 }}>
-                    <span style={{ fontWeight: 600 }}>{label}:</span>
-                    <span style={{ marginLeft: 8 }}>{display}</span>
+                  <div className="wind-info-display" key={key}>
+                    <span className="wind-info-label">{label}: </span>
+                    <span className="wind-info-data">{display}</span>
                   </div>
                 );
               });

@@ -1,0 +1,50 @@
+.more-details-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: start;
+    gap: 1rem;
+    background: rgba(0, 0, 0, 0.85);
+    color: white;
+    backdrop-filter: blur(10px);
+    border-radius: 12px;
+    padding: 16px 0;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+    gap: 12px;
+    min-width: 200px;
+    pointer-events: auto;
+}
+
+.more-details-container h4 {
+    font-size: 15px;
+    font-weight: 600;
+    color: white;
+}
+
+.more-details-container .humidity-value {
+    text-align: center;
+    font-size: 3.5em;
+    font-weight: bold;
+    color: white;
+    line-height: 1;
+    text-shadow: none;
+    margin-left: 2px;
+}
+
+.more-details-container .wind-info-display {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    display: flex;
+    justify-content: space-between;
+}
+
+.more-details-container .wind-info-label {
+    font-size: 12px;
+    font-weight: 600;
+    margin-right: 5px;
+    margin-left: 2.5px;
+}
+
+.more-details-container .wind-info-data {
+    font-size: 12px;
+}
