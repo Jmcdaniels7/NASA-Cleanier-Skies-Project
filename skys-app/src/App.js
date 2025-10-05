@@ -21,7 +21,7 @@ function App() {
     <>
     <div className="App">
       <div className="optin-alert">
-        <OptinAlert apiUrl={process.env.REACT_APP_API_URL} />
+        <OptinAlert apiUrl="https://nasa-clean-skys-backend-633395003337.europe-west1.run.app/api/subscribers" />
       </div>
       <main className="App-main">
   <div className="searchable-map-container">
