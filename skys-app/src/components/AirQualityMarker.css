@@ -63,12 +63,14 @@
   font-size: 18px;
   font-weight: bold;
   margin-bottom: 4px;
+  color: #000;
 }
 
 .aqi-category {
   font-size: 12px;
   font-weight: 500;
   opacity: 0.9;
+  color: #000;
 }
 
 .pollutants-grid {
