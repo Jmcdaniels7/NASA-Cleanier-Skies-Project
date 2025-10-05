@@ -228,6 +228,12 @@ const SimpleMap = forwardRef((props, ref) => {
           <p>{error}. Using default location (New York City).</p>
         </div>
       )}
+      {/* Meteomatics demo panel (humidity + wind) */}
+      {position && (
+        <div style={{ position: 'absolute', right: 12, top: 12, zIndex: 4000 }}>
+          <MeteomaticsDemo lat={position[0]} lon={position[1]} />
+        </div>
+      )}
       
       {/* Air Quality Status */}
       {airQualityLoading && (
