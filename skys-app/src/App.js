@@ -18,7 +18,7 @@ function App() {
     <div className="App">
       <main className="App-main">
         <SearchLocation onLocationSelect={handleLocationSelect} />
-        <SimpleMap ref={mapRef} />
+  <SimpleMap ref={mapRef} />
       </main>
     </div>
   );
