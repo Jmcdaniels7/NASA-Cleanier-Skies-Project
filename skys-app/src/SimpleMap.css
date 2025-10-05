@@ -1,6 +1,7 @@
 /* SimpleMap Component Styles */
 
-.simple-map-container {
+.searchable-map-container {
+  position: relative;
   width: 90%;
   max-width: 1200px;
   margin: 0 auto;
@@ -8,13 +9,31 @@
   margin-top: 0;
 }
 
+.simple-map-container {
+  margin: 0 auto;
+  position: relative;
+  margin-top: 0;
+}
+
+.map-overlays {
+  margin: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: none; /* Allow map interactions through overlays */
+  z-index: 1000;
+}
+
 /* AQI Box Overlay - Top Left Inside Map */
 .aqi-box-overlay {
-  position: absolute;
+  /* position: absolute;
   top: 10px;
   left: 10px;
   z-index: 1000;
-  pointer-events: none;
+  pointer-events: none; */
 }
 
 .aqi-compact-card {
@@ -75,6 +94,11 @@
   color: white;
 }
 
+.aqi-compact-message {
+  font-size: 12px;
+  color: white;
+}
+
 .aqi-compact-location {
   font-size: 11px;
   color: rgba(255, 255, 255, 0.7);
@@ -93,6 +117,16 @@
   border-top: 2px solid white;
   border-radius: 50%;
   animation: spin 1s linear infinite;
+}
+
+.show-more-info {
+  border: none;
+  background: rgba(120, 219, 255, 0.1);
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  color: white;
+  margin: 0.5rem;
 }
 
 @keyframes spin {
@@ -139,6 +173,10 @@
     0 0 0 1px rgba(255, 255, 255, 0.2),
     inset 0 1px 0 rgba(255, 255, 255, 0.3),
     0 0 30px rgba(120, 219, 255, 0.3);
+}
+
+.simple-map .aqi-value, .simple-map .aqi-category {
+  color: black;
 }
 
 /* Loading state styles */
@@ -247,6 +285,14 @@
   .simple-map {
     height: 500px;
     border-radius: 16px;
+  }
+
+  .aqi-compact-card{
+    max-width: 7rem;
+  }
+  
+  .aqi-compact-message {
+    display: none;
   }
   
   .map-loading,
@@ -433,6 +479,14 @@
   .air-quality-status {
     padding: 12px 16px;
     margin-top: 12px;
+  }
+
+  .aqi-compact-indicator{
+    padding: 0.5rem;
+  }
+
+  .show-more-info {
+    margin: 0.1rem;
   }
   
   .status-header {

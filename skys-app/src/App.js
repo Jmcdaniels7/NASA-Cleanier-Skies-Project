@@ -21,8 +21,10 @@ function App() {
         <OptinAlert apiUrl={process.env.REACT_APP_API_URL} />
       </div>
       <main className="App-main">
+        <div className="searchable-map-container">
         <SearchLocation onLocationSelect={handleLocationSelect} />
-  <SimpleMap ref={mapRef} />
+        <SimpleMap ref={mapRef} />
+        </div>
       </main>
     </div>
   </>
