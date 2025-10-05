@@ -2,7 +2,7 @@
   "name": "skys-app",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://<Jmcdaniels7>.github.io/<NASA-Cleanier-Skies-Project>/",
+  "homepage": "https://Jmcdaniels7.github.io/NASA-Cleanier-Skies-Project/",
   "dependencies": {
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
