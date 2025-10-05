@@ -22,9 +22,13 @@ const NewsSection = () => {
     const fetchNews = async () => {
       try {
         setLoading(true);
-        // Search for air quality and pollution related news only
+
+        // Reliable news sources for climate/environment news
+        const reliableSources = 'bbc-news,the-washington-post,reuters,the-guardian,associated-press,cnn,abc-news,nbc-news,axios,politico,national-geographic,the-new-york-times';
+
+        // Search for air quality and pollution related news from reliable sources
         const response = await fetch(
-          `https://newsapi.org/v2/everything?q="air quality" OR "air pollution" OR "PM2.5" OR smog OR emissions&language=en&sortBy=publishedAt&pageSize=20&apiKey=${NEWS_API_KEY}`
+          `https://newsapi.org/v2/everything?q=("air quality" OR "air pollution" OR "PM2.5" OR "PM10" OR smog OR "nitrogen dioxide" OR ozone) AND (pollution OR quality OR health OR emissions)&sources=${reliableSources}&language=en&sortBy=publishedAt&pageSize=50&apiKey=${NEWS_API_KEY}`
         );
 
         if (!response.ok) {
@@ -33,12 +37,17 @@ const NewsSection = () => {
 
         const data = await response.json();
 
-        // Filter to only show articles actually about air quality/pollution/climate
+        // Strict filter: must have air quality/pollution keywords
         const filteredArticles = (data.articles || []).filter(article => {
           const text = `${article.title} ${article.description || ''}`.toLowerCase();
-          return text.includes('air') || text.includes('pollution') || text.includes('quality') ||
-                 text.includes('pm2.5') || text.includes('smog') || text.includes('emission') ||
-                 text.includes('climate') || text.includes('environment');
+          const hasAirQuality = text.includes('air quality') || text.includes('air pollution') ||
+                                text.includes('pm2.5') || text.includes('pm10') ||
+                                text.includes('smog') || text.includes('nitrogen dioxide') ||
+                                text.includes('ozone') || text.includes('aqi');
+          const hasPollution = text.includes('pollution') || text.includes('emission') ||
+                               text.includes('pollutant');
+
+          return hasAirQuality || hasPollution;
         });
 
         console.log('Filtered articles:', filteredArticles.length);

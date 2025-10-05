@@ -6,22 +6,22 @@ import './AirQualityMarker.css';
 
 // Create custom icon for air quality markers
 const createAirQualityIcon = (pm25, aqiColor) => {
-  const iconSize = 25;
+  const iconSize = 35;
   const iconHtml = `
     <div style="
       width: ${iconSize}px;
       height: ${iconSize}px;
       background: ${aqiColor};
-      border: 3px solid white;
+      border: 4px solid white;
       border-radius: 50%;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.5), 0 0 0 2px rgba(0,0,0,0.2);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 12px;
+      font-size: 14px;
       font-weight: bold;
-      color: white;
-      text-shadow: 1px 1px 2px rgba(0,0,0,0.7);
+      color: #000;
+      text-shadow: none;
     ">
       ${pm25 ? Math.round(pm25) : '?'}
     </div>
@@ -37,21 +37,25 @@ const createAirQualityIcon = (pm25, aqiColor) => {
 
 const AirQualityMarker = memo(({ data }) => {
   const { coordinates, pm25, pm10, no2, o3, co, aqiColor, aqiCategory, healthRecommendation, location, city, country, lastUpdated } = data;
-  
+
   const customIcon = createAirQualityIcon(pm25, aqiColor);
-  
+
+  // Offset marker slightly to avoid overlapping with location marker
+  const offsetLat = coordinates.latitude + 0.001;
+  const offsetLng = coordinates.longitude + 0.001;
+
   const formatValue = (value, unit = 'μg/m³') => {
     if (value === null || value === undefined) return 'No data';
     return `${Math.round(value)} ${unit}`;
   };
-  
+
   const formatDate = (dateString) => {
     if (!dateString) return 'Unknown';
     return new Date(dateString).toLocaleString();
   };
-  
+
   return (
-    <Marker position={[coordinates.latitude, coordinates.longitude]} icon={customIcon}>
+    <Marker position={[offsetLat, offsetLng]} icon={customIcon}>
       <Popup className="air-quality-popup">
         <div className="air-quality-popup-content">
           <div className="popup-header">

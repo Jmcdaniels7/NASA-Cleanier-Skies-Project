@@ -47,6 +47,57 @@ body::before {
   100% { transform: translateY(-100px); opacity: 0.4; }
 }
 
+.optin-alert {
+  /* Default: participate in document flow and stick to the top when scrolling.
+     This prevents the alert from overlapping page content. If you need the
+     overlay behavior, add the `fixed` modifier class. */
+  position: sticky;
+  top: 1rem;
+  margin: 0 auto;
+  transform: none;
+  left: auto;
+  /* Blend with the page: translucent dark surface with slight blur */
+  background-color: rgba(10, 14, 28, 0.56);
+  backdrop-filter: blur(6px) saturate(110%);
+  -webkit-backdrop-filter: blur(6px) saturate(110%);
+  opacity: 1;
+  padding: 0.5rem 0.75rem;
+  border-radius: 8px;
+  box-shadow: 0 6px 18px rgba(2,6,23,0.16);
+  border: 1px solid rgba(255,255,255,0.06);
+  z-index: 1400;
+  width: min(720px, calc(100% - 2rem));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+}
+
+/* Overlay variant: keeps the old fixed/centered overlay behavior when needed */
+.optin-alert.fixed {
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  top: 1rem;
+  width: min(720px, calc(100% - 2rem));
+  background-color: rgba(10, 14, 28, 0.56);
+  backdrop-filter: blur(6px) saturate(110%);
+  -webkit-backdrop-filter: blur(6px) saturate(110%);
+  border: 1px solid rgba(255,255,255,0.06);
+}
+
+/* Slightly adjust for very small screens */
+@media (max-width: 420px) {
+  .optin-alert {
+    top: 0.5rem;
+    padding: 0.4rem 0.6rem;
+    width: calc(100% - 1rem);
+  }
+  .optin-alert.fixed {
+    width: calc(100% - 1rem);
+  }
+}
+
 .App {
   min-height: 100vh;
   display: flex;

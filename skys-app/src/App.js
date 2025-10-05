@@ -2,7 +2,7 @@ import React, { useRef } from 'react';
 import './App.css';
 import SimpleMap from './SimpleMap';
 import SearchLocation from './SearchLocation';
-import NewsSection from './components/NewsSection';
+import OptinAlert from './components/alert';
 
 function App() {
   const mapRef = useRef(null);
@@ -15,7 +15,11 @@ function App() {
   };
 
   return (
+    <>
     <div className="App">
+      <div className="optin-alert">
+        <OptinAlert apiUrl={process.env.REACT_APP_API_URL} />
+      </div>
       <main className="App-main">
         <div className="searchable-map-container">
         <SearchLocation onLocationSelect={handleLocationSelect} />
@@ -23,6 +27,8 @@ function App() {
         </div>
       </main>
     </div>
+  </>
+    
   );
 }
 
