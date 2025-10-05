@@ -67,8 +67,8 @@ function OptinAlert({ onSubscribe, apiUrl: apiUrlProp }) {
       setSnackbarMessage('Sending subscription to server...');
       setSnackbarSeverity('info');
       try {
-  await sendPhoneToApi(phone);
-  setSnackbarMessage("Subscribed! We'll send SMS alerts to " + phone + " (" + area + ").");
+        await sendPhoneToApi(phone);
+        setSnackbarMessage("Subscribed! We'll send SMS alerts to " + phone + " (" + area + ").");
         setSnackbarSeverity('success');
       } catch (err) {
         setSnackbarMessage(`Failed to subscribe: ${err.message || 'server error'}`);
