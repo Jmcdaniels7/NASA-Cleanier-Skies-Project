@@ -66,7 +66,7 @@ body::before {
   box-shadow: 0 6px 18px rgba(2,6,23,0.16);
   border: 1px solid rgba(255,255,255,0.06);
   z-index: 1400;
-  width: min(720px, calc(100% - 2rem));
+  width: min(720px, 100%);
   display: flex;
   align-items: center;
   justify-content: center;

@@ -8,7 +8,7 @@
     color: white;
     backdrop-filter: blur(10px);
     border-radius: 12px;
-    padding: 16px 0;
+    padding: 16px;
     border: 1px solid rgba(255, 255, 255, 0.2);
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
     gap: 12px;
@@ -47,4 +47,19 @@
 
 .more-details-container .wind-info-data {
     font-size: 12px;
+}
+
+@media  (max-width: 768px) {
+    .more-details-container {
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+        padding: 12px 0;
+    }
+
+    .more-details-container .wind-info-display {
+        flex-direction: column;
+        align-items: center;
+        gap: 4px;
+    }
 }
