@@ -127,6 +127,12 @@
   font-size: 0.75rem;
   color: white;
   margin: 0.5rem;
+  pointer-events: auto;
+  cursor: pointer;
+}
+
+.show-more-info:hover {
+  background: rgba(120, 219, 255, 0.2);
 }
 
 @keyframes spin {
