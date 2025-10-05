@@ -146,7 +146,7 @@ export function parseParameterTimeseries(json, parameter) {
 }
 
 // -------------------------
-// Humidity parameter helpers
+// Humidity parameter helpers (restored)
 // -------------------------
 
 const RH_MEASURES = ['mean', 'min', 'max'];
@@ -210,6 +210,111 @@ export function vaporPressureDeficitInterval(measure, interval = '1h', unit = 'h
   return `vapor_pressure_deficit_${measure}_2m_${interval}:${unit}`;
 }
 
+// -------------------------
+// Wind parameter builders
+// -------------------------
+
+const WIND_INTERVALS = ['5min','10min','15min','20min','30min','1h','3h','6h','12h','24h'];
+const WIND_MEASURES = ['mean','min','max'];
+
+function validateWindInterval(interval) {
+  if (!WIND_INTERVALS.includes(interval)) throw new Error(`invalid wind interval: ${interval}`);
+}
+
+function validateWindMeasure(measure) {
+  if (!WIND_MEASURES.includes(measure)) throw new Error(`invalid wind measure: ${measure}`);
+}
+
+/**
+ * Instantaneous wind speed at a given level (default 10m).
+ * Example: wind_speed_10m:ms
+ */
+export function windSpeed(level = '10m', unit = 'ms') {
+  return `wind_speed_${level}:${unit}`;
+}
+
+/**
+ * Instantaneous wind direction at a given level (degrees from North).
+ * Example: wind_dir_10m:d
+ */
+export function windDirection(level = '10m') {
+  return `wind_dir_${level}:d`;
+}
+
+/**
+ * Horizontal wind components (u and v)
+ * Example: wind_speed_u_10m:ms
+ */
+export function windSpeedU(level = '10m', unit = 'ms') {
+  return `wind_speed_u_${level}:${unit}`;
+}
+
+export function windSpeedV(level = '10m', unit = 'ms') {
+  return `wind_speed_v_${level}:${unit}`;
+}
+
+/**
+ * Vertical wind component (w)
+ * Example: wind_speed_w_850hPa:Pas
+ */
+export function windSpeedW(level = '850hPa', unit = 'ms') {
+  return `wind_speed_w_${level}:${unit}`;
+}
+
+/**
+ * Interval wind speed (mean or min over interval)
+ * Example: wind_speed_mean_100m_3h:ms
+ */
+export function intervalWindSpeed(measure = 'mean', level = '100m', interval = '3h', unit = 'ms') {
+  validateWindMeasure(measure);
+  validateWindInterval(interval);
+  return `wind_speed_${measure}_${level}_${interval}:${unit}`;
+}
+
+/**
+ * Interval wind gusts
+ * Example: wind_gusts_100m_3h:ms
+ */
+export function windGusts(level = '10m', interval = '3h', unit = 'ms') {
+  validateWindInterval(interval);
+  return `wind_gusts_${level}_${interval}:${unit}`;
+}
+
+/**
+ * Interval mean wind direction
+ * Example: wind_dir_mean_10m_1h:d
+ */
+export function windDirectionMean(level = '10m', interval = '1h') {
+  validateWindInterval(interval);
+  return `wind_dir_mean_${level}_${interval}:d`;
+}
+
+/**
+ * Mean wind speed over the last 10 years at 10m
+ * Example: wind_speed_10m_10y_mean:ms
+ */
+export function windSpeed10yMean(unit = 'ms') {
+  return `wind_speed_10m_10y_mean:${unit}`;
+}
+
+/**
+ * Vertical wind shear between two levels
+ * Example: wind_shear_850hPa_200hPa:ms
+ */
+export function windShear(lower = '850hPa', upper = '200hPa', unit = 'ms') {
+  return `wind_shear_${lower}_${upper}:${unit}`;
+}
+
+/**
+ * Interval wind shear (mean|min|max over interval)
+ * Example: wind_shear_mean_850hPa_500hPa_3h:ms
+ */
+export function intervalWindShear(measure = 'mean', lower = '850hPa', upper = '500hPa', interval = '3h', unit = 'ms') {
+  validateWindMeasure(measure);
+  validateWindInterval(interval);
+  return `wind_shear_${measure}_${lower}_${upper}_${interval}:${unit}`;
+}
+ 
 /**
  * Convenience fetch that accepts either a single parameter string or an array of parameter strings.
  * options: { start, end, step, params, location, format }
@@ -231,6 +336,19 @@ const METEOMATICS = {
   mixingRatio,
   vaporPressureDeficitInstant,
   vaporPressureDeficitInterval,
+  
+  // wind helpers
+  windSpeed,
+  windDirection,
+  windSpeedU,
+  windSpeedV,
+  windSpeedW,
+  intervalWindSpeed,
+  windGusts,
+  windDirectionMean,
+  windSpeed10yMean,
+  windShear,
+  intervalWindShear,
   fetchHumidity
 };
 
