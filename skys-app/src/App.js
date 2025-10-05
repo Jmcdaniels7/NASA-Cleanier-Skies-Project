@@ -4,6 +4,8 @@ import SimpleMap from './SimpleMap';
 import SearchLocation from './SearchLocation';
 import OptinAlert from './components/alert';
 import Prediction from './components/Prediction';
+import AboutSection from './components/AboutSection'; 
+
 
 function App() {
   const mapRef = useRef(null);
@@ -24,6 +26,7 @@ function App() {
         <OptinAlert apiUrl="https://nasa-clean-skys-backend-633395003337.europe-west1.run.app/api/subscribers" />
       </div>
       <main className="App-main">
+        <AboutSection />
   <div className="searchable-map-container">
   <SearchLocation onLocationSelect={handleLocationSelect} />
   <SimpleMap ref={mapRef} onPositionChange={setSelectedLocation} />
