@@ -175,6 +175,10 @@
     0 0 30px rgba(120, 219, 255, 0.3);
 }
 
+.simple-map .aqi-value, .simple-map .aqi-category {
+  color: black;
+}
+
 /* Loading state styles */
 .map-loading {
   width: 100%;
@@ -475,6 +479,14 @@
   .air-quality-status {
     padding: 12px 16px;
     margin-top: 12px;
+  }
+
+  .aqi-compact-indicator{
+    padding: 0.5rem;
+  }
+
+  .show-more-info {
+    margin: 0.1rem;
   }
   
   .status-header {

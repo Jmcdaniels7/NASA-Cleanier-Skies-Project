@@ -156,7 +156,11 @@
 
 /* Responsive */
 @media (max-width: 768px) {
+ 
   .news-grid {
+    max-height: 5rem;
+  }
+  /* .news-grid {
     grid-template-columns: 1fr;
     gap: 16px;
   }
@@ -167,5 +171,16 @@
 
   .news-card {
     padding: 16px;
+  } */
+}
+
+@media (max-width: 550px) {
+  .news-section {
+     max-width: 10rem;
+     margin: 0;
+  }
+  .news-grid::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
   }
 }
