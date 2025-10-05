@@ -4,7 +4,9 @@ import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import './SimpleMap.css';
 import AirQualityMarker from './components/AirQualityMarker';
+import NewsSection from './components/NewsSection';
 import { fetchAirQualityData, getAirQualitySummary, isDangerousAirQuality } from './services/airQualityService';
+import MeteomaticsDemo from './components/MeteomaticsDemo';
 
 // Fix for default markers in react-leaflet
 delete L.Icon.Default.prototype._getIconUrl;
@@ -217,10 +219,59 @@ const SimpleMap = forwardRef((props, ref) => {
             ) : null}
           </div>
         )}
+
+        {/* News Section Overlay - Below AQI box */}
+        <NewsSection />
       </MapContainer>
       {error && (
         <div className="map-warning">
           <p>{error}. Using default location (New York City).</p>
+        </div>
+      )}
+      {/* Meteomatics demo panel (humidity + wind) */}
+      {position && (
+        <div style={{ position: 'absolute', right: 12, top: 12, zIndex: 4000 }}>
+          <MeteomaticsDemo lat={position[0]} lon={position[1]} />
+        </div>
+      )}
+      
+      {/* Air Quality Status */}
+      {airQualityLoading && (
+        <div className="air-quality-status loading">
+          <div className="status-spinner"></div>
+          <p>Loading air quality data...</p>
+        </div>
+      )}
+      
+      {airQualityError && (
+        <div className="air-quality-status error">
+          <p>{airQualityError}</p>
+        </div>
+      )}
+      
+      {!airQualityLoading && !airQualityError && airQualityData.length > 0 && (
+        <div className="air-quality-status">
+          <div className="status-header">
+            <h4>🌫️ Air Quality Status</h4>
+            <span className="sensor-count">{airQualityData.length} sensor{airQualityData.length !== 1 ? 's' : ''} nearby</span>
+          </div>
+          <div className="status-summary">
+            {getAirQualitySummary(airQualityData).status !== 'No Data' ? (
+              <div className="summary-card">
+                <div className="summary-indicator" style={{ backgroundColor: getAirQualitySummary(airQualityData).color }}>
+                  <span className="summary-value">
+                    {getAirQualitySummary(airQualityData).pm25 ? Math.round(getAirQualitySummary(airQualityData).pm25) : '?'} μg/m³
+                  </span>
+                  <span className="summary-category">{getAirQualitySummary(airQualityData).status}</span>
+                </div>
+                <p className="summary-message">{getAirQualitySummary(airQualityData).message}</p>
+              </div>
+            ) : (
+              <div className="no-data">
+                <p>No air quality data available for this area</p>
+              </div>
+            )}
+          </div>
         </div>
       )}
     </div>

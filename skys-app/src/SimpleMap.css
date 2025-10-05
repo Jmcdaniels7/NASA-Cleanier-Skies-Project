@@ -100,12 +100,20 @@
 }
 
 /* Move Leaflet zoom controls to bottom right */
-.simple-map .leaflet-control-zoom {
-  position: absolute;
-  bottom: 20px;
-  right: 10px;
-  top: auto;
-  left: auto;
+.leaflet-control-zoom {
+  position: absolute !important;
+  bottom: 20px !important;
+  right: 10px !important;
+  top: auto !important;
+  left: auto !important;
+  z-index: 1001 !important;
+}
+
+.leaflet-top.leaflet-left {
+  top: auto !important;
+  left: auto !important;
+  bottom: 20px !important;
+  right: 10px !important;
 }
 
 .simple-map {
