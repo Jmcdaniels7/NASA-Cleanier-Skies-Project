@@ -27,14 +27,27 @@
   z-index: 1000;
 }
 
-/* AQI Box Overlay - Top Left Inside Map */
-.aqi-box-overlay {
-  /* position: absolute;
-  top: 10px;
-  left: 10px;
-  z-index: 1000;
-  pointer-events: none; */
+/* Bottom overlay spanning the full map width */
+.map-bottom-overlay {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 12px;
+  width: 100%;
 }
+
+.map-bottom-overlay > * {
+  pointer-events: auto;
+}
+
+.map-bottom-overlay .air-quality-status {
+  width: 100%;
+  max-width: 1200px; /* match searchable-map-container max-width */
+  box-sizing: border-box;
+}
+
+/* AQI Box Overlay - Top Left Inside Map */
+/* aqi-box-overlay intentionally removed; top-left compact AQI card handled elsewhere */
 
 .aqi-compact-card {
   background: rgba(0, 0, 0, 0.85);

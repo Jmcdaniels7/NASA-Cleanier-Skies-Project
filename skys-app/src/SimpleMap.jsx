@@ -5,6 +5,7 @@ import 'leaflet/dist/leaflet.css';
 import './SimpleMap.css';
 import AirQualityMarker from './components/AirQualityMarker';
 import NewsSection from './components/NewsSection';
+import Prediction from './components/Prediction';
 import { fetchAirQualityData, getAirQualitySummary, isDangerousAirQuality } from './services/airQualityService';
 import MeteomaticsDemo from './components/MeteomaticsDemo';
 
@@ -46,6 +47,14 @@ const SimpleMap = forwardRef((props, ref) => {
 
   useEffect(() => {
 
+    // If position changes, notify parent components so they can react (Prediction card, etc.)
+    // This keeps App.selectedPosition in sync with the map's internal position.
+    // (Do this early so the parent sees the initial geolocation too.)
+    // Note: do not call this repeatedly on every render; only when `position` value changes.
+    // We'll also set defaultPosition below.
+    if (position && typeof props.onPositionChange === 'function') {
+      try { props.onPositionChange({ position, label: undefined }); } catch (e) { /* ignore */ }
+    }
 
     // Default coordinates for New York City
     const defaultPosition = [40.7128, -74.0060];
@@ -145,6 +154,10 @@ const SimpleMap = forwardRef((props, ref) => {
     }
     // Fetch air quality data for the new location
     fetchAirQualityForLocation(coordinates[0], coordinates[1]);
+    // notify parent components about the position change (optional prop)
+    if (typeof props.onPositionChange === 'function') {
+      props.onPositionChange({ position: coordinates, label });
+    }
   };
 
   // Handle map click to fetch AQI at clicked location
@@ -152,7 +165,22 @@ const SimpleMap = forwardRef((props, ref) => {
     const { lat, lng } = latlng;
     setPosition([lat, lng]);
     fetchAirQualityForLocation(lat, lng);
+    if (typeof props.onPositionChange === 'function') {
+      props.onPositionChange({ position: [lat, lng], label: undefined });
+    }
   };
+
+  // When airQualityData updates, if it contains a city/name, notify parent with a friendly label
+  useEffect(() => {
+    if (!position) return;
+    if (!props.onPositionChange || typeof props.onPositionChange !== 'function') return;
+    if (airQualityData && airQualityData.length > 0) {
+      const city = airQualityData[0]?.city;
+      if (city) {
+        try { props.onPositionChange({ position, label: city }); } catch (e) { /* ignore */ }
+      }
+    }
+  }, [airQualityData]);
 
   // Expose the handleLocationSelect method to parent components
   useImperativeHandle(ref, () => ({
@@ -246,10 +274,14 @@ const SimpleMap = forwardRef((props, ref) => {
         )}
         
         </div>
-          
+
         {/* News Section Overlay - Below AQI box */}
         <NewsSection />
       </MapContainer>
+      {/* Prediction panel below the map */}
+      <div className="map-bottom-overlay">
+        <Prediction location={{ position, label: airQualityData[0]?.city || undefined }} />
+      </div>
     </div>
   );
 });
