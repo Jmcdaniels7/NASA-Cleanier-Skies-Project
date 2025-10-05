@@ -274,8 +274,7 @@ const SimpleMap = forwardRef((props, ref) => {
 
         {/* News Section Overlay - Bottom Left */}
         <NewsSection />
-      </MapContainer>
-    </div>
+      </div>
   );
 });
 

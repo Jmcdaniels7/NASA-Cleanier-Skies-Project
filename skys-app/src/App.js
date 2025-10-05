@@ -27,6 +27,10 @@ function App() {
   <div className="searchable-map-container">
   <SearchLocation onLocationSelect={handleLocationSelect} />
   <SimpleMap ref={mapRef} onPositionChange={setSelectedLocation} />
+    {/* Prediction panel placed under the map and spanning the map width */}
+    <div className="map-bottom-overlay">
+      <Prediction location={selectedLocation} />
+    </div>
   </div>
       </main>
     </div>

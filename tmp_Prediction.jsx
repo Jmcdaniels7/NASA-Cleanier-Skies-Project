@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+﻿import React, { useEffect, useState } from 'react';
 import { getPrediction, pm25ToAQI, aqiCategory } from '../services/predictionService';
 import ReusableLineChart from './ReuseableLineChart';
 
@@ -60,27 +60,26 @@ export default function Prediction({ location }) {
       </div>
       {/* Line chart showing predicted AQI over time */}
       {predictions && predictions.length > 0 && (
-        <div style={{ marginTop: 12, width: '100%', maxWidth: 960 }}>
-          {/* Chart container: full width of parent, fixed height for consistent aspect ratio */}
-          <div style={{ width: '100%', height: 160, background: 'transparent' }}>
-            {(() => {
-              const chartData = predictions.map(p => ({
-                name: new Date(p.ts).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-                aqi: pm25ToAQI(p.value),
-                pm25: p.value
-              }));
-              return (
-                <ReusableLineChart
-                  data={chartData}
-                  dataKey="aqi"
-                  xKey="name"
-                  lineName="AQI"
-                  yLabel="AQI"
-                  height={140}
-                />
-              );
-            })()}
-          </div>
+        <div style={{ marginTop: 12 }}>
+          {/* Build chart data: convert each predicted pm2.5 -> AQI */}
+          {(() => {
+            const chartData = predictions.map(p => ({
+              name: new Date(p.ts).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+              aqi: pm25ToAQI(p.value),
+              pm25: p.value
+            }));
+            return (
+              <ReusableLineChart
+                data={chartData}
+                dataKey="aqi"
+                xKey="name"
+                lineName="AQI"
+                yLabel="AQI"
+                width={Math.min(880, Math.max(320, Math.floor((window.innerWidth || 800) * 0.75)))}
+                height={140}
+              />
+            );
+          })()}
         </div>
       )}
     </div>
