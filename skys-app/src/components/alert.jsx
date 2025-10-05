@@ -8,13 +8,14 @@ import MuiAlert from '@mui/material/Alert';
 // Default API endpoint can be provided via environment variable REACT_APP_API_URL
 const DEFAULT_API_URL = (typeof process !== 'undefined' && process.env && process.env.REACT_APP_API_URL) ? process.env.REACT_APP_API_URL : undefined;
 
-const Alert = React.forwardRef(function Alert(props, ref) {
+const MuiAlertWrapper = React.forwardRef(function MuiAlertWrapper(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
 
 function OptinAlert({ onSubscribe, apiUrl: apiUrlProp }) {
   const [phone, setPhone] = useState('');
   const [area, setArea] = useState('');
+  const [hidden, setHidden] = useState(false);
   const [error, setError] = useState('');
   const [areaError, setAreaError] = useState('');
   const [open, setOpen] = useState(false);
@@ -56,8 +57,8 @@ function OptinAlert({ onSubscribe, apiUrl: apiUrlProp }) {
     if (hasError) return;
     setLastPhone(phone);
   if (typeof onSubscribe === 'function') onSubscribe(phone, area);
-    // show immediate UI feedback
-    setSnackbarMessage(`Subscribed! We'll send SMS alerts to ${phone}.`);
+  // show immediate UI feedback
+  setSnackbarMessage("Subscribed! We'll send SMS alerts to " + phone + ".");
     setSnackbarSeverity('success');
     setOpen(true);
 
@@ -66,8 +67,8 @@ function OptinAlert({ onSubscribe, apiUrl: apiUrlProp }) {
       setSnackbarMessage('Sending subscription to server...');
       setSnackbarSeverity('info');
       try {
-        await sendPhoneToApi(phone);
-        setSnackbarMessage(`Subscribed! We'll send SMS alerts to ${phone} (${area}).`);
+  await sendPhoneToApi(phone);
+  setSnackbarMessage("Subscribed! We'll send SMS alerts to " + phone + " (" + area + ").");
         setSnackbarSeverity('success');
       } catch (err) {
         setSnackbarMessage(`Failed to subscribe: ${err.message || 'server error'}`);
@@ -79,6 +80,8 @@ function OptinAlert({ onSubscribe, apiUrl: apiUrlProp }) {
     setPhone('');
     setArea('');
   };
+
+    const toggleHidden = () => setHidden(h => !h);
 
   const handleClose = (event, reason) => {
     if (reason === 'clickaway') return;
@@ -115,10 +118,20 @@ function OptinAlert({ onSubscribe, apiUrl: apiUrlProp }) {
     console.log('OptinAlert: server responded', json);
     return json;
   };
-
-  return (
-    <form onSubmit={handleSubmit} className="flex w-full max-w-sm items-center gap-2" aria-label="SMS opt-in form">
-  <span style={{ color: '#fff' }}>Opt-in for SMS alerts:</span>
+  const formMarkup = (
+    <form
+      onSubmit={handleSubmit}
+      aria-label="SMS opt-in form"
+      style={{
+        marginLeft: 8,
+        display: 'flex',
+        alignItems: 'center',
+        gap: 8,
+        width: '100%',
+        maxWidth: 720,
+        flexWrap: 'wrap'
+      }}
+    >
       <TextField
         id="area-input"
         value={area}
@@ -129,20 +142,22 @@ function OptinAlert({ onSubscribe, apiUrl: apiUrlProp }) {
         size="small"
         variant="outlined"
         inputProps={{ 'aria-label': 'area' }}
-        FormHelperTextProps={{ style: { color: 'rgba(255,255,255,0.8)' } }}
+  FormHelperTextProps={{ style: { color: 'rgba(255,255,255,0.8)', minHeight: 20, lineHeight: '20px' } }}
         InputLabelProps={{ style: { color: '#fff' } }}
         InputProps={{
           style: { color: '#fff' },
         }}
         sx={{
-          '& .MuiOutlinedInput-root': {
-            color: '#fff',
-            '& fieldset': { borderColor: 'rgba(255,255,255,0.18)' },
-            '&:hover fieldset': { borderColor: 'rgba(255,255,255,0.32)' },
-            '&.Mui-focused fieldset': { borderColor: 'rgba(255,255,255,0.48)' }
-          },
-          '& .MuiInputBase-input::placeholder': { color: 'rgba(255,255,255,0.6)' }
-        }}
+            flex: '1 1 160px',
+            minWidth: 120,
+            '& .MuiOutlinedInput-root': {
+              color: '#fff',
+              '& fieldset': { borderColor: 'rgba(255,255,255,0.18)' },
+              '&:hover fieldset': { borderColor: 'rgba(255,255,255,0.32)' },
+              '&.Mui-focused fieldset': { borderColor: 'rgba(255,255,255,0.48)' }
+            },
+            '& .MuiInputBase-input::placeholder': { color: 'rgba(255,255,255,0.6)' }
+          }}
       />
       <TextField
         id="phone-input"
@@ -150,17 +165,19 @@ function OptinAlert({ onSubscribe, apiUrl: apiUrlProp }) {
         onChange={(e) => setPhone(e.target.value)}
         placeholder="+1-317-999-9999"
         error={!!error}
-        helperText={error || 'Include country code if outside US'}
+  helperText={error || ''}
         size="small"
         variant="outlined"
         inputProps={{ 'aria-label': 'phone number' }}
-        FormHelperTextProps={{ style: { color: 'rgba(255,255,255,0.8)' } }}
+  FormHelperTextProps={{ style: { color: 'rgba(255,255,255,0.8)', minHeight: 20, lineHeight: '20px' } }}
         InputLabelProps={{ style: { color: '#fff' } }}
         InputProps={{
           style: { color: '#fff' },
           notched: true,
         }}
         sx={{
+          flex: '1 1 200px',
+          minWidth: 140,
           '& .MuiOutlinedInput-root': {
             color: '#fff',
             '& fieldset': {
@@ -184,6 +201,10 @@ function OptinAlert({ onSubscribe, apiUrl: apiUrlProp }) {
         className="but"
         variant="outlined"
         sx={{
+          alignSelf: 'center',
+          height: 36,
+          padding: '6px 12px',
+          flex: '0 0 auto',
           color: '#fff',
           borderColor: 'rgba(255,255,255,0.18)',
           '&:hover': { borderColor: 'rgba(255,255,255,0.32)' }
@@ -193,11 +214,57 @@ function OptinAlert({ onSubscribe, apiUrl: apiUrlProp }) {
       </Button>
 
       <Snackbar open={open} autoHideDuration={4000} onClose={handleClose}>
-        <Alert onClose={handleClose} severity={snackbarSeverity} sx={{ width: '100%' }}>
-          {snackbarMessage || `Subscribed! We'll send SMS alerts to ${lastPhone}.`}
-        </Alert>
+        <MuiAlertWrapper onClose={handleClose} severity={snackbarSeverity} sx={{ width: '100%' }}>
+          {snackbarMessage || ("Subscribed! We'll send SMS alerts to " + lastPhone + ".")}
+        </MuiAlertWrapper>
       </Snackbar>
     </form>
+  );
+
+  const containerStyle = {
+    position: 'relative',
+    paddingTop: 20,
+    paddingRight: 50,
+    display: 'flex',
+    alignItems: 'flex-start',
+    // only add extra space when the component is open so the fixed toggle doesn't overlap content
+    ...(hidden ? { minHeight: 48 } : { paddingTop: 56, paddingRight: 56 }),
+  };
+
+  return (
+    <div style={containerStyle}>
+      {/* hide/show toggle: use a fixed circular button so it remains visible when collapsed */}
+      <button
+        type="button"
+        onClick={toggleHidden}
+        aria-label={hidden ? 'show' : 'hide'}
+        style={{
+          position: 'absolute',
+          top: 8,
+          right: 2,
+          zIndex: 1400,
+          background: hidden ? 'rgba(0,0,0,0.7)' : 'rgba(255,255,255,0.06)',
+          color: '#fff',
+          border: 'none',
+          cursor: 'pointer',
+          fontSize: 18,
+          width: 36,
+          height: 36,
+          borderRadius: 18,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          boxShadow: hidden ? '0 2px 8px rgba(0,0,0,0.35)' : 'none',
+        }}
+      >
+        {hidden ? '+' : '-'}
+      </button>
+
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8, width: '100%' }}>
+        <span style={{ color: '#fff' }}>Opt-in for SMS alerts:</span>
+        {!hidden && formMarkup}
+      </div>
+    </div>
   );
 }
 
