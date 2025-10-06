@@ -1,6 +1,8 @@
 React App for Cleanier Skys project with NASA Space Apps Challenge.
 
-Air Pollution Map capable of searching the world for Air Quality index, Historical Data, and Air Quality News in your area.
+Air Pollution Map powered by Leaflet.JS, and implements OpenStreetMap to display detailed map imagery.
+
+Map capable of searching the world for Air Quality index, Historical Data, and Air Quality News in your area.
 
 Optin for Air Quality Alerts in your area with your phone number.
 
