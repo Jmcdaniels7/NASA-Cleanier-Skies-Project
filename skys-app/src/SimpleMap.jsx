@@ -124,7 +124,7 @@ const SimpleMap = forwardRef((props, ref) => {
     if ('Notification' in window && Notification.permission === 'granted') {
       new Notification('Air Quality Alert', {
         body: `${summary.status}: ${summary.message}`,
-        icon: '/favicon.ico'
+        icon: '/ClearSkies.png'
       });
     }
   };
