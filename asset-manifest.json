@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/NASA-Cleanier-Skies-Project/static/css/main.340abbb1.css",
-    "main.js": "/NASA-Cleanier-Skies-Project/static/js/main.9f5cebd5.js",
-    "static/js/453.fdbbf2eb.chunk.js": "/NASA-Cleanier-Skies-Project/static/js/453.fdbbf2eb.chunk.js",
-    "index.html": "/NASA-Cleanier-Skies-Project/index.html",
-    "main.340abbb1.css.map": "/NASA-Cleanier-Skies-Project/static/css/main.340abbb1.css.map",
-    "main.9f5cebd5.js.map": "/NASA-Cleanier-Skies-Project/static/js/main.9f5cebd5.js.map",
-    "453.fdbbf2eb.chunk.js.map": "/NASA-Cleanier-Skies-Project/static/js/453.fdbbf2eb.chunk.js.map"
+    "main.css": "/static/css/main.340abbb1.css",
+    "main.js": "/static/js/main.ab47ed0c.js",
+    "static/js/453.fdbbf2eb.chunk.js": "/static/js/453.fdbbf2eb.chunk.js",
+    "index.html": "/index.html",
+    "main.340abbb1.css.map": "/static/css/main.340abbb1.css.map",
+    "main.ab47ed0c.js.map": "/static/js/main.ab47ed0c.js.map",
+    "453.fdbbf2eb.chunk.js.map": "/static/js/453.fdbbf2eb.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.340abbb1.css",
-    "static/js/main.9f5cebd5.js"
+    "static/js/main.ab47ed0c.js"
   ]
 }
