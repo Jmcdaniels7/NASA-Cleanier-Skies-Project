@@ -1,4 +1,4 @@
-React App for Cleanier Skys project with NASA Hackathon.
+React App for Cleanier Skys project with NASA Space Apps Challenge.
 
 Air Pollution Map capable of searching the world for Air Quality index, Historical Data, and Air Quality News in your area.
 
