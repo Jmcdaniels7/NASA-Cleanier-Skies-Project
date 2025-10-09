@@ -1,0 +1,31 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      REACT_APP_WAQI_API_KEY: ${{ secrets.REACT_APP_WAQI_API_KEY }}
+      REACT_APP_NEWS_API_KEY: ${{ secrets.REACT_APP_NEWS_API_KEY }}
+      REACT_APP_METEOMATICS_USER: ${{ secrets.REACT_APP_METEOMATICS_USER }}
+      REACT_APP_METEOMATICS_PASSWORD: ${{ secrets.REACT_APP_METEOMATICS_PASSWORD }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run tests
+        run: npm test
